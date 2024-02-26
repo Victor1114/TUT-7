@@ -1,0 +1,77 @@
+---
+title: "Mini-essay 7"
+author: 
+  - Yuchen Chen
+thanks: "Code and data are available at: <https://github.com/Victor1114/Torono_Central_Intake_calls.git>"
+date: today
+date-format: long
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+## Introduction
+
+In this study, we're looking to the difficulties of making sure our data is accurate in statistical analysis. We start off with a dataset that's made using a Normal distribution with a mean of 1 and a standard deviation of 1. However, the instrument has a mistake in it, which means that it has a maximum memory of 900 observations, and begins overwriting at that point. So, when we collect 1000, the last 100 get replaced with copies of the first 100. On top of that, when we're cleaning up the data, our research assistant make half of the negative numbers positive and mess up the decimal place for numbers between 1 and 1.1 by accident. Even with these mistakes, we still want to figure out if the average of the original data is more than 0 by using tool R(\@citeR). This study shows how important it is to have reliable data and talks about the problems we face with tools and human errors in data analysis.
+
+## **Methodology**
+
+First I generated a dataset to simulate the true data generating process, which is a Normal distribution with a mean of 1 and a standard deviation of 1. This was accomplished using a random number generator to produce 1,000 observations. Then I draw the histogram\@fig-initial to see what the graph looks like normally.Next,I simulate the situation which is the measuring instrument had a memory capacity constraint that limited it to storing only the most recent 900 observations. As a result, the final 100 observations were overwritten with the first 100, thereby repeating them.Because half of the negative values in the dataset were changed to positive by the assistant, I randomly selecting half of them to be converted to their absolute values. In order to achieve this, I creates a new variable called '***negatives'*** and stores all the negative values from the '***adjusted_data'*** dataset. It does this by checking each value in '***adjusted_data'*** to see if it is less than zero (the condition ***adjusted_data \< 0***), and if so, that value is included in the negatives variable. Then I use sample function to randomly select half of these negative values and use absolute function to convert them to positive equivalents. Moreover, I divide the data between 1-1.1 by 10 to simulate the described error in the data cleaning process: misplacing the decimal for numbers between 1 and 1.1.Finally, I get a cleaned dataset fits all situations, and draw a histogram\@fig-adjusted to show the differences with initial dataset.
+
+## Results:
+
+I use tidyverse\@tidyverse in are to estimated mean of the adjusted dataset is 1.006388. When compared to the initial dataset, which had a mean of 0.9792082, there is a slight but noticeable increase. This change in the mean is substantiated by the examination of the histograms, which illustrate the distribution of both datasets.
+
+```{r}
+#| label: fig-initial
+#| echo: false
+#| warning: false
+#| message: false
+#install.packages("tidyverse")
+library(tidyverse)
+
+set.seed(302)
+
+initial_data <- rnorm(1000, mean = 1, sd = 1)
+mean(initial_data)
+hist(initial_data)
+```
+
+```{r}
+#| label: fig-adjusted
+#| echo: false
+#| warning: false
+#| message: false
+
+set.seed(302)
+
+initial_data <- rnorm(1000, mean = 1, sd = 1)
+
+adjusted_data <- initial_data
+adjusted_data[901:1000] <- initial_data[1:100]
+negatives <- which(adjusted_data < 0)
+
+adjusted_data[
+  sample(negatives,
+         size = length(negatives)/2)] <- abs(
+           adjusted_data[sample(negatives, 
+                                size = length(negatives)/2)])
+adjusted_data[
+  which(adjusted_data >= 1 & adjusted_data <= 1.1)] <- adjusted_data[
+    which(adjusted_data >= 1 & adjusted_data <= 1.1)] / 10
+
+mean(adjusted_data)
+hist(adjusted_data)
+```
+
+## Discussion
+
+The instrumental error resulted in the last 100 observations being duplicates of the first 100. This redundancy not only reduces the effective sample size but also biases the results if these 100 observations are not representative of the entire population.
+
+The human error in data cleaning, where negative values were incorrectly changed to positive, results in much less negative number showing on histogram\@fig-adjusted.
+
+The decimal place error which misplaces the decimal for numbers between 1 and 1.1 makes much more number appearing between 0-0.5\@fig-adjusted.
+
+## Conclusion
+
+The result shows that the adjusted mean is slightly higher than the mean of initial data. Even the difference not big, but it change the structure and distribution of this dataset, which should be normal distribution but it dosen't looks like. The outcomes of this research demonstrate how minor inaccuracies can make biases and emphasize the accuracy of dataset and detailed data verification to keep the reliability of statistical inferences.
