@@ -2,7 +2,7 @@
 title: "Mini-essay 7"
 author: 
   - Yuchen Chen
-thanks: "Code and data are available at: <https://github.com/Victor1114/TUT-7.git>Acknowledge the review of Simon"
+thanks: "Code and data are available at: <https://github.com/Victor1114/TUT-7.git>Acknowledge the review of Simon(Pengyu Sui) "
 date: today
 date-format: long
 format: pdf
